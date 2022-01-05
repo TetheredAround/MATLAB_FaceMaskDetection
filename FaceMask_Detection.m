@@ -8,7 +8,6 @@ w = webcam(temp_indx);
     'Only one resolution can be used.',''},...
     'SelectionMode','single','ListString', w.AvailableResolutions());
 
-%w.Brightness = 128;
 w.Resolution = w.AvailableResolutions{temp_indx};
 viewer = vision.DeployableVideoPlayer();
 viewer.Size = "Custom";
@@ -48,7 +47,6 @@ cont = 1;
 while cont
     img = snapshot(w);
     sz = size(img);
-    %targetSize = [224 224];
     targetSize = [(sz(1)*downSampleSize) (sz(2)*downSampleSize)];
     img_r = imresize(img, targetSize);
     bbox = [];
@@ -56,10 +54,6 @@ while cont
 
     stream = rgb2gray(imresize(img, downSampleSize));
     boundingbox = faceDetector.step(stream);
-    
-    %First Gen Model shows below above 20% (COVID19_Mask_Yolo.mat)
-    %Second Gen Model shows below 10%
-    %Third Gen Model shows simalar results if not worse than second gen
 
     [bbox, score, label] = detect(detector, img_r, 'Threshold', 0.8, 'ExecutionEnvironment', "cpu");
 
@@ -70,13 +64,13 @@ while cont
         num = numel(bboxf(:,1));
 
         label = reshape(label, [num,1]);
-        detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Masked"], 'Color', 'magenta', ...
+        detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Masked"], 'Color', 'green', ...
            'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
 %       detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', bboxf, [string(label)+ " : "+string(score)], 'Color', 'magenta', ...
 %           'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
         detectedImg = insertText(detectedImg, [600, 1],  "      Mask Detected!       ", 'FontSize', 35, 'BoxColor', 'g');
     else
-        detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Unmasked "], 'Color', 'magenta', ...
+        detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Unmasked "], 'Color', 'red', ...
             'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
         detectedImg = insertText(detectedImg, [600, 1],  "      No Mask Detected!      ", 'FontSize', 35, 'BoxColor', 'r');   
     end
