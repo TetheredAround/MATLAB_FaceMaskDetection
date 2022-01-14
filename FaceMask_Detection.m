@@ -32,7 +32,11 @@ switch temp_indx
         path = 'Trained Detectors\COVID19_Mask_yolo_Kaggle.mat';
     case 6
         [file,path] = uigetfile('*.mat');
+        path = path + "/" + file;
 end
+
+obj_indx = questdlg('What to Detect?', ...
+	'Object Detection', 'Head', 'Mask', 'Head');
 
 load(path);
 mdl = 'YOLOv2';
@@ -64,10 +68,14 @@ while cont
         num = numel(bboxf(:,1));
 
         label = reshape(label, [num,1]);
-        detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Masked"], 'Color', 'green', ...
-           'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
-%       detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', bboxf, [string(label)+ " : "+string(score)], 'Color', 'magenta', ...
-%           'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
+        if obj_indx == 1
+            
+            detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Masked"], 'Color', 'green', ...
+                'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
+        else
+            detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', bboxf, [string(label)+ " : "+string(score)], 'Color', 'magenta', ...
+               'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
+        end
         detectedImg = insertText(detectedImg, [600, 1],  "      Mask Detected!       ", 'FontSize', 35, 'BoxColor', 'g');
     else
         detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Unmasked "], 'Color', 'red', ...
