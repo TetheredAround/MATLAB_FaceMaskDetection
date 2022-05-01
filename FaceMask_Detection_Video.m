@@ -40,12 +40,11 @@ PositionMultiplier = 1/downSampleSize;
 
 cont = 1;
 
-Center_X = (sz(2)/2)-(sz(2)/4.5);
-Center_Y = sz(1)/2;
-
 while cont
     img = readFrame(vidobj);
     sz = size(img);
+    Center_X = (sz(2)/2)-(sz(2)/4.5);
+    Center_Y = sz(1)/2;
     targetSize = [(sz(1)*downSampleSize) (sz(2)*downSampleSize)];
     img_r = imresize(img, targetSize);
     bbox = [];
