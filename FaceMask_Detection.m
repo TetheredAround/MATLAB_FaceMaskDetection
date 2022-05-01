@@ -68,19 +68,20 @@ while cont
         num = numel(bboxf(:,1));
 
         label = reshape(label, [num,1]);
-        if obj_indx == 1
-            
+        if obj_indx == 'Head'
             detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Masked"], 'Color', 'green', ...
                 'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
         else
             detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', bboxf, [string(label)+ " : "+string(score)], 'Color', 'green', ...
                'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
         end
-        detectedImg = insertText(detectedImg, [600, 1],  "      Mask Detected!       ", 'FontSize', 35, 'BoxColor', 'g');
-    else
+        detectedImg = insertText(detectedImg, [Center_X, 1],  "      Face & Mask Detected!       ", 'FontSize', 35, 'BoxColor', 'g');
+    elseif isempty(bbox) && ~isempty(boundingbox)
         detectedImg = insertObjectAnnotation(detectedImg, 'rectangle', boundingbox.*PositionMultiplier, ["Unmasked "], 'Color', 'red', ...
             'Fontsize', 50, 'linewidth', 8, 'textboxopacity', 1);
-        detectedImg = insertText(detectedImg, [600, 1],  "      No Mask Detected!      ", 'FontSize', 35, 'BoxColor', 'r');   
+        detectedImg = insertText(detectedImg, [Center_X, 1],  "      No Mask Detected!      ", 'FontSize', 35, 'BoxColor', 'r');
+    else
+        detectedImg = insertText(detectedImg, [Center_X, 1],  "      No Face Detected!      ", 'FontSize', 35, 'BoxColor', [0.85 0.85 0.85]);
     end
     
     viewer(detectedImg)
