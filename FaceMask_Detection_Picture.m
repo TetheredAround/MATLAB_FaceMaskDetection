@@ -41,6 +41,8 @@ cont = 1;
 
 while cont
     sz = size(img);
+    Center_X = (sz(2)/2)-(sz(2)/4.5);
+    Center_Y = sz(1)/2;
     targetSize = [(sz(2)*downSampleSize) (sz(1)*downSampleSize)];
     img_r = imresize(img, targetSize);
     bbox = [];
